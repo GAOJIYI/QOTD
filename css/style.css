@@ -231,11 +231,11 @@ a { color: inherit; text-decoration: none; }
   margin: 0 0 2px;
 }
 .article-title {
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 800;
   color: var(--text);
-  line-height: 1.45;
-  margin: 0 0 22px;
+  line-height: 1.55;
+  margin: 4px 0 22px;
 }
 
 /* 章节标签小标题 */
@@ -270,6 +270,8 @@ a { color: inherit; text-decoration: none; }
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  background: var(--text);
+  opacity: 0.9;
 }
 .thinking-card.ops {
   background: #e8f8f5;
@@ -277,14 +279,27 @@ a { color: inherit; text-decoration: none; }
   color: #0f3d32;
 }
 .thinking-card.ops .thinking-title { color: #0f3d32; }
-.thinking-card.ops .thinking-title::before { background: #0f8a72; }
 .thinking-card.pm {
   background: #e8f0fe;
   border-color: #c5d9ff;
   color: #14233a;
 }
 .thinking-card.pm .thinking-title { color: #14233a; }
-.thinking-card.pm .thinking-title::before { background: #2f6fed; }
+.thinking-card.ops .thinking-title::before,
+.thinking-card.pm .thinking-title::before { background: var(--text); }
+
+.thinking-card ul, .thinking-card ol {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+  color: var(--text);
+}
+.thinking-card li {
+  margin: 8px 0;
+  font-size: 15px;
+  line-height: 1.6;
+  list-style-type: disc;
+}
 
 /* ---------- 上下期导航 ---------- */
 .pager {
