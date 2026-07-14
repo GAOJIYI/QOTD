@@ -13,14 +13,14 @@
   }
 
   function fetchJSON(url) {
-    return fetch(url, { cache: "no-cache" }).then(function (r) {
+    return fetch(url + "?t=" + Date.now(), { cache: "no-cache" }).then(function (r) {
       if (!r.ok) throw new Error("无法加载 " + url);
       return r.json();
     });
   }
 
   function fetchText(url) {
-    return fetch(url, { cache: "no-cache" }).then(function (r) {
+    return fetch(url + "?t=" + Date.now(), { cache: "no-cache" }).then(function (r) {
       if (!r.ok) throw new Error("无法加载 " + url);
       return r.text();
     });
@@ -38,10 +38,8 @@
   }
 
   function postProcessArticle(box) {
-    // 首段：日期 + 主标题
     var ps = box.querySelectorAll("p");
     if (ps.length >= 1) { ps[0].className = "article-date"; }
-    if (ps.length >= 2) { ps[1].className = "article-title"; }
 
     // 把【xxx】标签与正文拆成两段（LLM 有时不会在标签后空行，会导致正文被染成标题色）
     [].forEach.call(box.querySelectorAll("p"), function (p) {
@@ -58,11 +56,16 @@
       }
     });
 
-    // 把【xxx】标签段落变成小标题，并把运营/产品思考两个模块包成色块卡片
+    // 把【xxx】标签段落变成章节标题，并把运营/产品思考两个模块包成色块卡片
     [].forEach.call(box.querySelectorAll("p"), function (p) {
       var t = p.textContent.trim();
       if (/^【[^】]+】$/.test(t)) {
         p.className = "section-tag";
+        // 每日一问标签后面那段就是文章标题
+        var next = p.nextElementSibling;
+        if (next && next.tagName === "P" && !next.className && t === "【每日一问】") {
+          next.className = "article-title";
+        }
         var sectionMap = {
           "【运营思考】": "ops",
           "【产品思考】": "pm"
@@ -80,6 +83,11 @@
         }
       }
     });
+
+    // 兜底：没有显式【每日一问】时，把第二段当主标题
+    if (!box.querySelector(".article-title") && ps.length >= 2) {
+      ps[1].className = "article-title";
+    }
   }
 
   /* ---------------- 首页 ---------------- */
